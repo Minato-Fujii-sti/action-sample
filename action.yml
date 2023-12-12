@@ -1,0 +1,5 @@
+name: "Hello World"
+description: "actionのサンプル"
+runs:
+  using: "node12"
+  main: "index.js"
