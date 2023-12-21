@@ -41,9 +41,9 @@ export const getResponse = (): Response<ResponseSuccess, ResponseError> => {
 const MayBe = () => {
   const response = getResponse();
   if (response.type === "error") {
-    console.log(response);
+    console.log("error", response);
   } else {
-    console.log(response);
+    console.log("ok", response);
   }
   return (
     <div>
