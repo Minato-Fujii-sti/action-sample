@@ -1,0 +1,89 @@
+name: Continuous Integration
+on: push
+
+jobs:
+  unit-test:
+    name: Unit Test
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [18]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+      - name: Cd
+        run: cd fizz-buzz
+      - name: Set Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Get NPM cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - name: Cache NPM
+        uses: actions/cache@v1.1.0
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: |
+          cd fizz-buzz
+          yarn install
+      - name: Test
+        run: |
+          cd fizz-buzz
+          yarn test
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: test-coverage-${{ matrix.os }}-${{ matrix.node }}
+          path: fizz-buzz/coverage
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+      - name: Cd
+        run: cd fizz-buzz
+      - name: Set Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Get NPM cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - name: Cache NPM
+        uses: actions/cache@v1.1.0
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: |
+          cd fizz-buzz
+          yarn install
+      - name: Lint
+        run: |
+          cd fizz-buzz
+          yarn run lint
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          import sys
+          print(sys.version)
+        shell: python
+    outputs:
+      hoge: "python"
+  get-output:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{needs.python.outputs.hoge}}"
+    needs: python

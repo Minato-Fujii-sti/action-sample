@@ -1,0 +1,19 @@
+scalar Date
+
+type Query {
+  todos: [Todo!]!
+}
+
+type Todo {
+  id: ID!
+  title: String!
+  description: String
+}
+
+query Todos {
+    todos {
+        id
+        title
+        description
+    }
+}

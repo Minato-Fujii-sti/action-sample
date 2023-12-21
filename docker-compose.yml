@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  # Node.js
+  node:
+    build: .
+    container_name: node-clocking
+    tty: true
+    ports:
+      - 3333:3333
+    # プロジェクトディレクトリにマウントする
+    volumes:
+      - ./app-next:/var/www
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    # ネットワーク
+    networks:
+      - default
+
+  # Node.js
+  api:
+    build: .
+    container_name: api-clocking
+    tty: true
+    ports:
+      - 3444:3444
+    # プロジェクトディレクトリにマウントする
+    volumes:
+      - ./api-nest:/var/www
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    # ネットワーク
+    networks:
+      - default
+
+  # データベース
+  db:
+    image: mysql:latest
+    container_name: mysql-clocking
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      # 設定ファイルディレクトリにマウントする
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      # DB初期化ディレクトリにマウントする
+      # - ./mysql/init.d:/docker-entrypoint-initdb.d
+    # ネットワーク
+    networks:
+      - default
+
+# ネットワーク
+networks:
+  default:
+    driver: bridge

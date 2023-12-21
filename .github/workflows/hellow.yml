@@ -1,0 +1,11 @@
+name: Hello, World!
+on: push
+
+jobs:
+  build:
+    name: Greeting
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello, World!"
+      - name: Hello
+        uses: Minato-Fujii-sti/action-sample@v1.0.1
