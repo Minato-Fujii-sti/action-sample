@@ -11,9 +11,7 @@ on:
 
 jobs:
   test:
-    if: github.event_name == 'pull_request' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    name: Test
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
@@ -23,3 +21,22 @@ jobs:
           echo test
           ls
           echo ${{github.event_name}}
+
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+
+      - name: debug
+        run: |
+          echo scan
+
+  call-deploy:
+    needs: [test, scan]
+    if: github.event_name == 'pull_request_target' && github.event.pull_request.merged == true
+    uses: ./.github/workflows/deploy.yml
+    secrets:
+      password: "hogehoge"
+    with:
+      id: "12345-67890"

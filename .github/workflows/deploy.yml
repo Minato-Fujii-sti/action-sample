@@ -1,13 +1,14 @@
 name: cd
 
 on:
-  workflow_run:
-    workflows: [ci]
-    types:
-      - completed
-    branches:
-      - "main"
-      - "develop"
+  workflow_call:
+    inputs:
+      id:
+        required: true
+        type: string
+    secrets:
+      password:
+        required: true
 
 jobs:
   deploy:
@@ -22,3 +23,5 @@ jobs:
         run: |
           echo deploy
           ls
+          echo ${{secrets.password}}
+          echo ${{inputs.id}}
