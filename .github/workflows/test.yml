@@ -22,4 +22,4 @@ jobs:
         run: |
           echo test
           ls
-          echo ${{github.event}}
+          echo ${{github.event_name}}
