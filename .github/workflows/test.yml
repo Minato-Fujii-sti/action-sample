@@ -1,12 +1,25 @@
-name: Test
-on: push
+name: ci
+
+on:
+  pull_request:
+  pull_request_target:
+    types:
+      - closed
+    branches:
+      - "main"
+      - "develop"
 
 jobs:
   test:
+    if: github.event_name == 'pull_request' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     name: Test
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
-      - name: Vertify hello action works
-        uses: ./
+
+      - name: debug
+        run: |
+          echo test
+          ls
+          echo ${{github.event_name}}
