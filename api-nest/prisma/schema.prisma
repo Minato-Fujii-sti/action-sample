@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement())
+  timestamp BigInt
+  name      String @db.VarChar(255)
+}
+
+// userスキーマ定義
+model User {
+  id         Int        @id @default(autoincrement())
+  user_id    String     @unique
+  username   String     @db.VarChar(20)
+  password   String     @db.VarChar(30)
+  created_at DateTime   @default(now()) @db.DateTime(6)
+  updated_at DateTime   @default(now()) @db.DateTime(6)
+  Clocking   Clocking[]
+}
+
+// 打刻データ
+model Clocking {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  user       User      @relation(fields: [user_id], references: [id])
+  day        DateTime
+  start_time DateTime?
+  end_time   DateTime?
+  break_time Int
+  note       String
+  created_at DateTime  @default(now()) @db.DateTime(6)
+  updated_at DateTime  @default(now()) @db.DateTime(6)
+}

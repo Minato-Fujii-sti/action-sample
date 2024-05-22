@@ -1,0 +1,29 @@
+overwrite: true
+config:
+  maybeValue: T | undefined
+  enumsAsTypes: true
+  withComponent: false
+  withHooks: true
+  withHOC: false
+  reactApolloVersion: 3
+  preResolveTypes: true
+  addDocBlocks: false
+schema:
+  - ./src\**\*.graphql
+documents:
+  - ./src\**\*.graphql
+generates:
+  ../app-next/src/graphql/generated-types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+      - named-operations-object
+  # ./graphql/api/generated-types.ts:
+  #   schema:
+  #     - ./src\users\users.graphql
+  #   plugins:
+  #     - typescript
+  #     - typescript-operations
+  #     - named-operations-object
+  #     - '@madsci/graphql-codegen-nestjs'

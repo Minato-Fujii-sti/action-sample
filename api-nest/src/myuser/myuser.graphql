@@ -1,0 +1,43 @@
+type Myuser {
+  id: ID!
+  username: String!
+  password: String!
+  created_at: Date!
+  updated_at: Date!
+}
+
+input CreateMyuserInput {
+  username: String!
+  password: String!
+}
+
+input UpdateMyuserInput {
+  id: ID!
+  created_at: Date!
+}
+
+type Query {
+  myusers: [Myuser]!
+  myuser(id: ID!): Myuser
+}
+
+type Mutation {
+  createMyuser(createMyuserInput: CreateMyuserInput!): Myuser!
+  updateMyuser(updateMyuserInput: UpdateMyuserInput!): Myuser!
+  removeMyuser(id: ID!): Myuser
+}
+
+query MyusersAndTods {
+  myusers {
+    id
+    username
+    password
+    created_at
+    updated_at
+  }
+  todos {
+    id
+    title
+    description
+  }
+}
